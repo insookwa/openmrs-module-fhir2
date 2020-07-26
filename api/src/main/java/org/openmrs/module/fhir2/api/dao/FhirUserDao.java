@@ -12,10 +12,14 @@ package org.openmrs.module.fhir2.api.dao;
 import javax.validation.constraints.NotNull;
 
 import org.openmrs.User;
+import org.openmrs.annotation.Authorized;
+import org.openmrs.util.PrivilegeConstants;
 
 public interface FhirUserDao {
 	
+	@Authorized(PrivilegeConstants.GET_USERS)
 	User getUserByUuid(@NotNull String uuid);
 	
+	@Authorized(PrivilegeConstants.GET_USERS)
 	User getUserByUserName(String clientName);
 }

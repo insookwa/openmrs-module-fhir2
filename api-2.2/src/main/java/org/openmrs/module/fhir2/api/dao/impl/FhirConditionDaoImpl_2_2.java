@@ -42,15 +42,16 @@ import ca.uhn.fhir.rest.param.TokenAndListParam;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.openmrs.Condition;
 import org.openmrs.ConditionClinicalStatus;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.annotation.OpenmrsProfile;
 import org.openmrs.module.fhir2.FhirConstants;
 import org.openmrs.module.fhir2.api.dao.FhirConditionDao;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 import org.openmrs.module.fhir2.api.util.LocalDateTimeFactory;
+import org.openmrs.util.PrivilegeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -63,6 +64,37 @@ public class FhirConditionDaoImpl_2_2 extends BaseFhirDao<Condition> implements 
 	
 	@Autowired
 	private LocalDateTimeFactory localDateTimeFactory;
+	
+	@Override
+	@Authorized(PrivilegeConstants.GET_CONDITIONS)
+	public Condition get(String uuid) {
+		return super.get(uuid);
+	}
+	
+	@Override
+	@Authorized(PrivilegeConstants.EDIT_CONDITIONS)
+	public Condition createOrUpdate(Condition newEntry) {
+		return super.createOrUpdate(newEntry);
+	}
+	
+	@Override
+	@Authorized(PrivilegeConstants.DELETE_CONDITIONS)
+	public Condition delete(String uuid) {
+		return super.delete(uuid);
+	}
+	
+	@Override
+	@Authorized(PrivilegeConstants.GET_CONDITIONS)
+	public List<String> getSearchResultUuids(SearchParameterMap theParams) {
+		return super.getSearchResultUuids(theParams);
+	}
+	
+	@Override
+	@Authorized(PrivilegeConstants.GET_CONDITIONS)
+	public List<Condition> getSearchResults(SearchParameterMap theParams, List matchingResourceUuids, int firstResult,
+	        int lastResult) {
+		return super.getSearchResults(theParams, matchingResourceUuids, firstResult, lastResult);
+	}
 	
 	private ConditionClinicalStatus convertStatus(String status) {
 		if ("active".equalsIgnoreCase(status)) {
@@ -233,40 +265,5 @@ public class FhirConditionDaoImpl_2_2 extends BaseFhirDao<Condition> implements 
 	private void handleOnsetAge(Criteria criteria, QuantityAndListParam onsetAge) {
 		handleAndListParam(onsetAge, onsetAgeParam -> handleAgeByDateProperty("onsetDate", onsetAgeParam))
 		        .ifPresent(criteria::add);
-	}
-	
-	@Override
-	public Condition saveCondition(Condition condition) {
-		Session session = getSessionFactory().getCurrentSession();
-		Date endDate = condition.getEndDate() != null ? condition.getEndDate() : new Date();
-		if (condition.getEndReason() != null) {
-			condition.setEndDate(endDate);
-		}
-		
-		Condition existingCondition = get(condition.getUuid());
-		if (condition.equals(existingCondition)) {
-			return existingCondition;
-		}
-		if (existingCondition == null) {
-			session.saveOrUpdate(condition);
-			return condition;
-		}
-		
-		condition = Condition.newInstance(condition);
-		condition.setPreviousVersion(existingCondition);
-		
-		if (existingCondition.getClinicalStatus().equals(condition.getClinicalStatus())) {
-			existingCondition.setVoided(true);
-			session.saveOrUpdate(existingCondition);
-			session.saveOrUpdate(condition);
-			return condition;
-		}
-		Date onSetDate = condition.getOnsetDate() != null ? condition.getOnsetDate() : new Date();
-		existingCondition.setEndDate(onSetDate);
-		session.saveOrUpdate(existingCondition);
-		condition.setOnsetDate(onSetDate);
-		session.saveOrUpdate(condition);
-		
-		return condition;
 	}
 }
