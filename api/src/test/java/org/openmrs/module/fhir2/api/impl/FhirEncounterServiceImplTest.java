@@ -44,6 +44,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openmrs.Encounter;
 import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirEncounterDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -74,6 +75,9 @@ public class FhirEncounterServiceImplTest {
 	
 	@Mock
 	private EncounterTranslator encounterTranslator;
+	
+	@Mock
+	private FhirGlobalPropertyService globalPropertyService;
 	
 	@Mock
 	private SearchQuery<Encounter, org.hl7.fhir.r4.model.Encounter, FhirEncounterDao, EncounterTranslator> searchQuery;
@@ -127,7 +131,7 @@ public class FhirEncounterServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
 		
 		IBundleProvider results = encounterService.searchForEncounters(dateRangeParam, null, null, null, null, null);
 		
@@ -156,7 +160,7 @@ public class FhirEncounterServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
 		
 		IBundleProvider results = encounterService.searchForEncounters(null, location, null, null, null, null);
 		
@@ -186,7 +190,7 @@ public class FhirEncounterServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
 		
 		IBundleProvider results = encounterService.searchForEncounters(null, null, participant, null, null, null);
 		
@@ -216,7 +220,7 @@ public class FhirEncounterServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
 		
 		IBundleProvider results = encounterService.searchForEncounters(null, null, null, subject, null, null);
 		
@@ -238,7 +242,7 @@ public class FhirEncounterServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
 		
 		IBundleProvider results = encounterService.searchForEncounters(null, null, null, null, uuid, null);
 		
@@ -260,7 +264,7 @@ public class FhirEncounterServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
 		
 		IBundleProvider results = encounterService.searchForEncounters(null, null, null, null, null, lastUpdated);
 		

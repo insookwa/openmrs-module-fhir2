@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
@@ -46,6 +47,7 @@ import org.openmrs.Patient;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirPatientDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -100,6 +102,9 @@ public class FhirPatientServiceImplTest {
 	
 	@Mock
 	private FhirPatientDao dao;
+	
+	@Mock
+	private FhirGlobalPropertyService globalPropertyService;
 	
 	@Mock
 	private SearchQuery<Patient, org.hl7.fhir.r4.model.Patient, FhirPatientDao, PatientTranslator> searchQuery;
@@ -164,7 +169,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(stringAndListParam, null, null, null, null, null, null,
@@ -187,7 +192,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, stringAndListParam, null, null, null, null, null,
@@ -212,7 +217,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, stringAndListParam, null, null, null, null,
@@ -235,7 +240,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, stringAndListParam, null, null, null, null, null,
@@ -258,7 +263,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, stringAndListParam, null, null, null, null,
@@ -279,7 +284,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(stringAndListParam, null, null, null, null, null, null,
 		    null, null, null, null, null, null, null, null);
@@ -299,7 +304,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, stringAndListParam, null, null, null, null, null,
 		    null, null, null, null, null, null, null, null);
@@ -318,7 +323,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, stringAndListParam, null, null, null, null,
 		    null, null, null, null, null, null, null, null);
@@ -338,7 +343,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, tokenAndListParam, null, null,
@@ -358,7 +363,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, tokenAndListParam, null, null,
 		    null, null, null, null, null, null, null, null);
@@ -382,7 +387,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, dateRangeParam, null, null,
@@ -402,7 +407,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, dateRangeParam, null, null,
 		    null, null, null, null, null, null, null);
@@ -426,7 +431,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, dateRangeParam, null,
@@ -446,7 +451,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, dateRangeParam, null,
 		    null, null, null, null, null, null, null);
@@ -466,7 +471,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null,
@@ -486,7 +491,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null,
 		    stringAndListParam, null, null, null, null, null, null);
@@ -506,7 +511,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
@@ -526,7 +531,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
 		    stringAndListParam, null, null, null, null, null);
@@ -546,7 +551,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
@@ -566,7 +571,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
 		    null, stringAndListParam, null, null, null, null);
@@ -585,7 +590,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(patients);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
@@ -605,7 +610,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
 		    null, null, stringAndListParam, null, null, null);
@@ -624,7 +629,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(patient));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
@@ -645,7 +650,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
 		    null, null, null, uuid, null, null);
@@ -664,7 +669,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PATIENT_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(patient));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		when(patientTranslator.toFhirResource(patient)).thenReturn(fhirPatient);
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
@@ -686,7 +691,7 @@ public class FhirPatientServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, patientTranslator, globalPropertyService));
 		
 		IBundleProvider results = patientService.searchForPatients(null, null, null, null, null, null, null, null, null,
 		    null, null, null, null, lastUpdated, null);

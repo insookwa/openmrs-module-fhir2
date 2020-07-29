@@ -41,6 +41,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openmrs.Drug;
 import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirMedicationDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -67,6 +68,9 @@ public class FhirMedicationServiceImplTest {
 	
 	@Mock
 	private FhirMedicationDao medicationDao;
+	
+	@Mock
+	private FhirGlobalPropertyService globalPropertyService;
 	
 	@Mock
 	private SearchQuery<Drug, Medication, FhirMedicationDao, MedicationTranslator> searchQuery;
@@ -124,8 +128,8 @@ public class FhirMedicationServiceImplTest {
 		
 		when(medicationDao.getResultUuids(any())).thenReturn(Collections.singletonList(MEDICATION_UUID));
 		when(medicationDao.search(any(), any(), anyInt(), anyInt())).thenReturn(medications);
-		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator));
+		when(searchQuery.getQueryResults(any(), any(), any())).thenReturn(
+		    new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator, globalPropertyService));
 		when(medicationTranslator.toFhirResource(drug)).thenReturn(medication);
 		
 		IBundleProvider result = fhirMedicationService.searchForMedications(code, null, null, null, null, null);
@@ -150,8 +154,8 @@ public class FhirMedicationServiceImplTest {
 		
 		when(medicationDao.getResultUuids(any())).thenReturn(Collections.singletonList(MEDICATION_UUID));
 		when(medicationDao.search(any(), any(), anyInt(), anyInt())).thenReturn(medications);
-		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator));
+		when(searchQuery.getQueryResults(any(), any(), any())).thenReturn(
+		    new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator, globalPropertyService));
 		when(medicationTranslator.toFhirResource(drug)).thenReturn(medication);
 		
 		IBundleProvider result = fhirMedicationService.searchForMedications(null, dosageForm, null, null, null, null);
@@ -176,8 +180,8 @@ public class FhirMedicationServiceImplTest {
 		
 		when(medicationDao.getResultUuids(any())).thenReturn(Collections.singletonList(MEDICATION_UUID));
 		when(medicationDao.search(any(), any(), anyInt(), anyInt())).thenReturn(medications);
-		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator));
+		when(searchQuery.getQueryResults(any(), any(), any())).thenReturn(
+		    new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator, globalPropertyService));
 		when(medicationTranslator.toFhirResource(drug)).thenReturn(medication);
 		
 		IBundleProvider result = fhirMedicationService.searchForMedications(null, null, ingredientCode, null, null, null);
@@ -201,8 +205,8 @@ public class FhirMedicationServiceImplTest {
 		
 		when(medicationDao.getResultUuids(any())).thenReturn(Collections.singletonList(MEDICATION_UUID));
 		when(medicationDao.search(any(), any(), anyInt(), anyInt())).thenReturn(medications);
-		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator));
+		when(searchQuery.getQueryResults(any(), any(), any())).thenReturn(
+		    new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator, globalPropertyService));
 		when(medicationTranslator.toFhirResource(drug)).thenReturn(medication);
 		
 		IBundleProvider result = fhirMedicationService.searchForMedications(null, null, null, status, null, null);
@@ -223,8 +227,8 @@ public class FhirMedicationServiceImplTest {
 		
 		when(medicationDao.getResultUuids(any())).thenReturn(Collections.singletonList(MEDICATION_UUID));
 		when(medicationDao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(drug));
-		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator));
+		when(searchQuery.getQueryResults(any(), any(), any())).thenReturn(
+		    new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator, globalPropertyService));
 		when(medicationTranslator.toFhirResource(drug)).thenReturn(medication);
 		
 		IBundleProvider result = fhirMedicationService.searchForMedications(null, null, null, null, uuid, null);
@@ -245,8 +249,8 @@ public class FhirMedicationServiceImplTest {
 		
 		when(medicationDao.getResultUuids(any())).thenReturn(Collections.singletonList(MEDICATION_UUID));
 		when(medicationDao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(drug));
-		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator));
+		when(searchQuery.getQueryResults(any(), any(), any())).thenReturn(
+		    new SearchQueryBundleProvider<>(theParams, medicationDao, medicationTranslator, globalPropertyService));
 		when(medicationTranslator.toFhirResource(drug)).thenReturn(medication);
 		
 		IBundleProvider result = fhirMedicationService.searchForMedications(null, null, null, null, null, lastUpdated);

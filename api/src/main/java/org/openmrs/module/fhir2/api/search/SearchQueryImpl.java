@@ -14,17 +14,22 @@ import lombok.NoArgsConstructor;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.openmrs.Auditable;
 import org.openmrs.OpenmrsObject;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirDao;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 import org.openmrs.module.fhir2.api.translators.ToFhirTranslator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @NoArgsConstructor
 public class SearchQueryImpl<T extends OpenmrsObject & Auditable, U extends IBaseResource, O extends FhirDao<T>, V extends ToFhirTranslator<T, U>> implements SearchQuery<T, U, O, V> {
 	
+	@Autowired
+	private FhirGlobalPropertyService globalPropertyService;
+	
 	@Override
 	public IBundleProvider getQueryResults(SearchParameterMap theParams, O dao, V translator) {
-		return new SearchQueryBundleProvider<>(theParams, dao, translator);
+		return new SearchQueryBundleProvider<>(theParams, dao, translator, globalPropertyService);
 	}
 }

@@ -32,8 +32,6 @@ public interface FhirDao<T extends OpenmrsObject & Auditable> extends Serializab
 	
 	List<String> getResultUuids(SearchParameterMap theParams);
 	
-	Integer getPreferredPageSize();
-	
 	default Collection<T> search(SearchParameterMap theParams, List<String> matchingResourceUuids) {
 		return search(theParams, matchingResourceUuids, 0, matchingResourceUuids.size());
 	}

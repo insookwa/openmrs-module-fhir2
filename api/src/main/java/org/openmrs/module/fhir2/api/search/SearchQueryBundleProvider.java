@@ -24,6 +24,8 @@ import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.hl7.fhir.r4.model.InstantType;
 import org.openmrs.Auditable;
 import org.openmrs.OpenmrsObject;
+import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirDao;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 import org.openmrs.module.fhir2.api.translators.ToFhirTranslator;
@@ -42,16 +44,22 @@ public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U ex
 	
 	private final UUID uuid;
 	
+	private final FhirGlobalPropertyService globalPropertyService;
+	
 	private transient Integer count;
+	
+	private transient Integer pageSize;
 	
 	private transient List<String> matchingResourceUuids;
 	
-	public SearchQueryBundleProvider(SearchParameterMap theParams, FhirDao<T> dao, ToFhirTranslator<T, U> translator) {
+	public SearchQueryBundleProvider(SearchParameterMap theParams, FhirDao<T> dao, ToFhirTranslator<T, U> translator,
+	    FhirGlobalPropertyService globalPropertyService) {
 		this.dao = dao;
 		this.datePublished = new Date();
 		this.theParams = theParams;
 		this.translator = translator;
 		this.uuid = UUID.randomUUID();
+		this.globalPropertyService = globalPropertyService;
 	}
 	
 	@Override
@@ -87,7 +95,11 @@ public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U ex
 	
 	@Override
 	public Integer preferredPageSize() {
-		return dao.getPreferredPageSize();
+		if (pageSize == null) {
+			pageSize = globalPropertyService.getGlobalProperty(FhirConstants.OPENMRS_FHIR_DEFAULT_PAGE_SIZE, 10);
+		}
+		
+		return pageSize;
 	}
 	
 	@Nullable

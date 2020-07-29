@@ -36,6 +36,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openmrs.Obs;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirDiagnosticReportDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -60,6 +61,9 @@ public class FhirDiagnosticReportServiceImplTest {
 	
 	@Mock
 	private DiagnosticReportTranslator translator;
+	
+	@Mock
+	private FhirGlobalPropertyService globalPropertyService;
 	
 	@Mock
 	private SearchQuery<Obs, DiagnosticReport, FhirDiagnosticReportDao, DiagnosticReportTranslator> searchQuery;
@@ -189,7 +193,7 @@ public class FhirDiagnosticReportServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(UUID));
 		when(translator.toFhirResource(obs)).thenReturn(diagnosticReport);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator, globalPropertyService));
 		
 		IBundleProvider results = service.searchForDiagnosticReports(null, null, null, null, null, null, null);
 		

@@ -44,6 +44,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirPersonDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -104,6 +105,9 @@ public class FhirPersonServiceImplTest {
 	private PersonTranslator personTranslator;
 	
 	@Mock
+	private FhirGlobalPropertyService globalPropertyService;
+	
+	@Mock
 	private SearchQuery<org.openmrs.Person, Person, FhirPersonDao, PersonTranslator> searchQuery;
 	
 	private FhirPersonServiceImpl personService;
@@ -158,7 +162,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(stringAndListParam, null, null, null, null, null, null, null,
@@ -182,7 +186,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(stringAndListParam, null, null, null, null, null, null, null,
@@ -206,7 +210,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(stringAndListParam, null, null, null, null, null, null, null,
 		    null, null);
@@ -227,7 +231,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(null, tokenAndListParam, null, null, null, null, null, null,
@@ -250,7 +254,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(null, tokenAndListParam, null, null, null, null, null, null,
 		    null, null);
@@ -275,7 +279,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(null, null, dateRangeParam, null, null, null, null, null,
@@ -299,7 +303,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(null, null, dateRangeParam, null, null, null, null, null,
 		    null, null);
@@ -321,7 +325,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, stringAndListParam, null, null, null, null,
@@ -345,7 +349,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, stringAndListParam, null, null, null, null,
 		    null, null);
@@ -367,7 +371,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, stringAndListParam, null, null, null,
@@ -391,7 +395,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, stringAndListParam, null, null, null,
 		    null, null);
@@ -413,7 +417,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, null, stringAndListParam, null, null,
@@ -437,7 +441,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, null, stringAndListParam, null, null,
 		    null, null);
@@ -459,7 +463,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, null, null, stringAndListParam, null,
@@ -483,7 +487,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, null, null, stringAndListParam, null,
 		    null, null);
@@ -504,7 +508,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, null, null, null, uuid, null, null);
@@ -524,7 +528,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, null, null, null, uuid, null, null);
 		
@@ -542,7 +546,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(PERSON_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(person));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		when(personTranslator.toFhirResource(person)).thenReturn(fhirPerson);
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, null, null, null, null, lastUpdated,
@@ -564,7 +568,7 @@ public class FhirPersonServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.emptyList());
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, personTranslator, globalPropertyService));
 		
 		IBundleProvider results = personService.searchForPeople(null, null, null, null, null, null, null, null, lastUpdated,
 		    null);

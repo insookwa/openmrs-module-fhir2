@@ -37,6 +37,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openmrs.Location;
 import org.openmrs.LocationTag;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirLocationDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -69,13 +70,13 @@ public class FhirLocationServiceImplTest {
 	private static final int END_INDEX = 10;
 	
 	@Mock
-	FhirLocationDao locationDao;
+	private FhirLocationDao locationDao;
 	
 	@Mock
-	LocationTranslator locationTranslator;
+	private LocationTranslator locationTranslator;
 	
 	@Mock
-	SearchQuery<Location, org.hl7.fhir.r4.model.Location, FhirLocationDao, LocationTranslator> searchQuery;
+	private FhirGlobalPropertyService globalPropertyService;
 	
 	private FhirLocationServiceImpl fhirLocationService;
 	
@@ -133,8 +134,8 @@ public class FhirLocationServiceImplTest {
 		
 		SearchParameterMap theParams = new SearchParameterMap();
 		when(locationDao.getResultUuids(any())).thenReturn(Collections.singletonList(LOCATION_UUID));
-		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, locationDao, locationTranslator));
+		when(searchQuery.getQueryResults(any(), any(), any())).thenReturn(
+		    new SearchQueryBundleProvider<>(theParams, locationDao, locationTranslator, globalPropertyService));
 		when(locationTranslator.toFhirResource(location)).thenReturn(fhirLocation);
 		when(locationDao.search(any(), any(), anyInt(), anyInt())).thenReturn(locations);
 		

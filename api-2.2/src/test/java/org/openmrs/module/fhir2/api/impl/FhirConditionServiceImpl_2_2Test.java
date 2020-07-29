@@ -44,6 +44,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openmrs.Condition;
 import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirConditionDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -68,6 +69,9 @@ public class FhirConditionServiceImpl_2_2Test {
 	
 	@Mock
 	private ConditionTranslator<Condition> conditionTranslator;
+	
+	@Mock
+	private FhirGlobalPropertyService globalPropertyService;
 	
 	@Mock
 	private SearchQuery<Condition, org.hl7.fhir.r4.model.Condition, FhirConditionDao<Condition>, ConditionTranslator<Condition>> searchQuery;
@@ -168,7 +172,7 @@ public class FhirConditionServiceImpl_2_2Test {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(CONDITION_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(openmrsCondition));
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, conditionTranslator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, conditionTranslator, globalPropertyService));
 		when(conditionTranslator.toFhirResource(openmrsCondition)).thenReturn(fhirCondition);
 		
 		IBundleProvider result = conditionService.searchConditions(patientReference, codeList, clinicalList, onsetDate,

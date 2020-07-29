@@ -39,6 +39,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.openmrs.TestOrder;
 import org.openmrs.module.fhir2.FhirConstants;
 import org.openmrs.module.fhir2.FhirTestConstants;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirServiceRequestDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -63,6 +64,9 @@ public class FhirServiceRequestServiceImplTest {
 	
 	@Mock
 	private FhirServiceRequestDao<TestOrder> dao;
+	
+	@Mock
+	private FhirGlobalPropertyService globalPropertyService;
 	
 	@Mock
 	private SearchQuery<TestOrder, ServiceRequest, FhirServiceRequestDao<TestOrder>, ServiceRequestTranslator<TestOrder>> searchQuery;
@@ -121,7 +125,7 @@ public class FhirServiceRequestServiceImplTest {
 		when(translator.toFhirResource(order)).thenReturn(fhirServiceRequest);
 		
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator, globalPropertyService));
 		
 		IBundleProvider results = serviceRequestService.searchForServiceRequests(uuid, null);
 		
@@ -144,7 +148,7 @@ public class FhirServiceRequestServiceImplTest {
 		when(translator.toFhirResource(order)).thenReturn(fhirServiceRequest);
 		
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator, globalPropertyService));
 		
 		IBundleProvider results = serviceRequestService.searchForServiceRequests(null, lastUpdated);
 		

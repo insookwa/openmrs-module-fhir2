@@ -28,8 +28,6 @@ import org.openmrs.Auditable;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.Retireable;
 import org.openmrs.Voidable;
-import org.openmrs.module.fhir2.FhirConstants;
-import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirDao;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +53,6 @@ public abstract class BaseFhirDao<T extends OpenmrsObject & Auditable> extends B
 	@Setter(AccessLevel.PROTECTED)
 	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
-	
-	@Autowired
-	private FhirGlobalPropertyService globalPropertyService;
 	
 	protected BaseFhirDao() {
 		typeToken = new TypeToken<T>(getClass()) {
@@ -120,10 +115,6 @@ public abstract class BaseFhirDao<T extends OpenmrsObject & Auditable> extends B
 	}
 	
 	@Override
-	public Integer getPreferredPageSize() {
-		return globalPropertyService.getGlobalProperty(FhirConstants.OPENMRS_FHIR_DEFAULT_PAGE_SIZE, 10);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public Collection<T> search(SearchParameterMap theParams, List matchingResourceUuids, int firstResult, int lastResult) {
 		return createCriteria(theParams).add(in("uuid", matchingResourceUuids.subList(firstResult, lastResult))).list();

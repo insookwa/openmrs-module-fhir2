@@ -36,6 +36,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openmrs.module.fhir2.FhirTask;
+import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirTaskDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryBundleProvider;
@@ -70,6 +71,9 @@ public class FhirTaskServiceImplTest {
 	
 	@Mock
 	TaskTranslator translator;
+	
+	@Mock
+	FhirGlobalPropertyService fhirGlobalPropertyService;
 	
 	@Mock
 	SearchQuery<FhirTask, Task, FhirTaskDao, TaskTranslator> searchQuery;
@@ -197,7 +201,7 @@ public class FhirTaskServiceImplTest {
 		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(TASK_UUID));
 		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(openmrsTasks);
 		when(searchQuery.getQueryResults(any(), any(), any()))
-		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator));
+		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator, fhirGlobalPropertyService));
 		when(translator.toFhirResource(openmrsTask)).thenReturn(task);
 		
 		IBundleProvider results = fhirTaskService.searchForTasks(null, null, null, null, null, null);
