@@ -30,7 +30,7 @@ public class FhirConstants {
 	
 	public static final String FHIR_TERMINOLOGY_PARTICIPATION_TYPE = HL7_FHIR_CODE_SYSTEM_PREFIX + "v3-ParticipationType";
 	
-	public static final String DIAGNOSTIC_SERVICE_SECTIONS_VALUESET_URI = HL7_FHIR_VALUE_SET_PREFIX
+	public static final String DIAGNOSTIC_SERVICE_SECTIONS_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX
 	        + "/diagnostic-service-sections";
 	
 	public static final String INTERPRETATION_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX + "/observation-interpretation";
@@ -125,11 +125,11 @@ public class FhirConstants {
 	
 	public static final String DIAGNOSTIC_REPORT_CATEGORY_LAB = "LAB";
 	
-	public static final String PERSON_ATTRIBUTE_TYPE_PROPERTY = "fhir2.personAttributeTypeUuid";
+	public static final String PERSON_CONTACT_ATTRIBUTE_TYPE = "fhir2.personAttributeTypeUuid";
 	
-	public static final String LOCATION_ATTRIBUTE_TYPE_PROPERTY = "fhir2.locationAttributeTypeUuid";
+	public static final String LOCATION_CONTACT_ATTRIBUTE_TYPE = "fhir2.locationAttributeTypeUuid";
 	
-	public static final String PROVIDER_ATTRIBUTE_TYPE_PROPERTY = "fhir2.providerAttributeTypeUuid";
+	public static final String PROVIDER_CONTACT_ATTRIBUTE_TYPE = "fhir2.providerAttributeTypeUuid";
 	
 	public static final String GLOBAL_PROPERTY_MILD = "allergy.concept.severity.mild";
 	

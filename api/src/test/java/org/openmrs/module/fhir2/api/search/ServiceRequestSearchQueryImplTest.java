@@ -12,16 +12,17 @@ package org.openmrs.module.fhir2.api.search;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.param.DateRangeParam;
 import ca.uhn.fhir.rest.param.TokenAndListParam;
 import ca.uhn.fhir.rest.param.TokenParam;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.ServiceRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,8 +69,9 @@ public class ServiceRequestSearchQueryImplTest extends BaseModuleContextSensitiv
 		return searchQuery.getQueryResults(theParams, dao, translator);
 	}
 	
-	private List<IBaseResource> get(IBundleProvider results) {
-		return results.getResources(START_INDEX, END_INDEX);
+	private List<ServiceRequest> get(IBundleProvider results) {
+		return results.getResources(START_INDEX, END_INDEX).stream().filter(it -> it instanceof ServiceRequest)
+		        .map(it -> (ServiceRequest) it).collect(Collectors.toList());
 	}
 	
 	@Test
@@ -81,13 +83,13 @@ public class ServiceRequestSearchQueryImplTest extends BaseModuleContextSensitiv
 		
 		IBundleProvider results = search(theParams);
 		
-		List<IBaseResource> resultList = get(results);
-		
 		assertThat(results, notNullValue());
-		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), equalTo(1));
-		assertThat(((ServiceRequest) resultList.iterator().next()).getIdElement().getIdPart(),
-		    equalTo(SERVICE_REQUEST_UUID));
+		assertThat(results.size(), equalTo(1));
+		
+		List<ServiceRequest> resultList = get(results);
+		
+		assertThat(resultList, hasSize(equalTo(1)));
+		assertThat(resultList.get(0).getIdElement().getIdPart(), equalTo(SERVICE_REQUEST_UUID));
 	}
 	
 	@Test
@@ -99,27 +101,12 @@ public class ServiceRequestSearchQueryImplTest extends BaseModuleContextSensitiv
 		
 		IBundleProvider results = search(theParams);
 		
-		List<IBaseResource> resultList = get(results);
-		
 		assertThat(results, notNullValue());
-		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), equalTo(1));
-	}
-	
-	@Test
-	public void searchForServiceRequests_shouldSearchForServiceRequestsByLastUpdatedDateVoided() {
-		DateRangeParam lastUpdated = new DateRangeParam().setUpperBound(DATE_VOIDED).setLowerBound(DATE_VOIDED);
+		assertThat(results.size(), equalTo(1));
 		
-		SearchParameterMap theParams = new SearchParameterMap().addParameter(FhirConstants.COMMON_SEARCH_HANDLER,
-		    FhirConstants.LAST_UPDATED_PROPERTY, lastUpdated);
+		List<ServiceRequest> resultList = get(results);
 		
-		IBundleProvider results = search(theParams);
-		
-		List<IBaseResource> resultList = get(results);
-		
-		assertThat(results, notNullValue());
-		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), equalTo(1));
+		assertThat(resultList, hasSize(equalTo(1)));
 	}
 	
 	@Test
@@ -133,13 +120,12 @@ public class ServiceRequestSearchQueryImplTest extends BaseModuleContextSensitiv
 		
 		IBundleProvider results = search(theParams);
 		
-		List<IBaseResource> resultList = get(results);
+		List<ServiceRequest> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), equalTo(1));
-		assertThat(((ServiceRequest) resultList.iterator().next()).getIdElement().getIdPart(),
-		    equalTo(SERVICE_REQUEST_UUID));
+		assertThat(resultList, hasSize(equalTo(1)));
+		assertThat(resultList.get(0).getIdElement().getIdPart(), equalTo(SERVICE_REQUEST_UUID));
 	}
 	
 	@Test
@@ -153,7 +139,7 @@ public class ServiceRequestSearchQueryImplTest extends BaseModuleContextSensitiv
 		
 		IBundleProvider results = search(theParams);
 		
-		List<IBaseResource> resultList = get(results);
+		List<ServiceRequest> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, empty());

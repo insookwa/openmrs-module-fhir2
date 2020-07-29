@@ -75,7 +75,7 @@ public class FhirPersonDaoImpl extends BasePersonDao<Person> implements FhirPers
 	}
 	
 	@Override
-	protected Optional<Criterion> getCriteriaForLastUpdated(DateRangeParam param) {
+	protected Optional<Criterion> handleLastUpdated(DateRangeParam param) {
 		List<Optional<Criterion>> criterionList = new ArrayList<>();
 		
 		criterionList.add(handleDateRange("personDateVoided", param));
@@ -92,5 +92,22 @@ public class FhirPersonDaoImpl extends BasePersonDao<Person> implements FhirPers
 	@Override
 	protected String getSqlAlias() {
 		return "this_";
+	}
+	
+	@Override
+	protected void handleVoidable(Criteria criteria) {
+		criteria.add(eq("personVoided", false));
+	}
+	
+	@Override
+	protected boolean isVoided(Person object) {
+		return object.getPersonVoided();
+	}
+	
+	@Override
+	protected Person voidObject(Person object) {
+		object.setPersonVoided(true);
+		object.setPersonVoidReason("Voided via FHIR API");
+		return object;
 	}
 }

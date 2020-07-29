@@ -9,14 +9,7 @@
  */
 package org.openmrs.module.fhir2.api.dao.impl;
 
-import static org.hibernate.criterion.Restrictions.and;
-import static org.hibernate.criterion.Restrictions.isNull;
-import static org.hibernate.criterion.Restrictions.or;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import ca.uhn.fhir.rest.param.DateRangeParam;
 import lombok.AccessLevel;
@@ -45,15 +38,7 @@ public class FhirServiceRequestDaoImpl extends BaseFhirDao<TestOrder> implements
 	}
 	
 	@Override
-	protected Optional<Criterion> getCriteriaForLastUpdated(DateRangeParam param) {
-		List<Optional<Criterion>> criterionList = new ArrayList<>();
-		
-		criterionList.add(handleDateRange("dateVoided", param));
-		
-		criterionList.add(Optional.of(
-		    and(toCriteriaArray(Stream.of(Optional.of(isNull("dateVoided")), handleDateRange("dateCreated", param))))));
-		
-		return Optional.of(or(toCriteriaArray(criterionList)));
+	protected Optional<Criterion> handleLastUpdated(DateRangeParam param) {
+		return super.handleLastUpdatedImmutable(param);
 	}
-	
 }

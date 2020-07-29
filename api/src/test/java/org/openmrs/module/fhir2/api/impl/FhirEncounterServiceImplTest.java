@@ -14,13 +14,13 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -118,7 +118,7 @@ public class FhirEncounterServiceImplTest {
 	
 	@Test
 	public void searchForEncounter_shouldReturnCollectionOfEncounterByDate() {
-		Collection<Encounter> encounters = new ArrayList<>();
+		List<Encounter> encounters = new ArrayList<>();
 		DateRangeParam dateRangeParam = new DateRangeParam(new DateParam(ENCOUNTER_DATETIME));
 		
 		encounters.add(openMrsEncounter);
@@ -127,8 +127,8 @@ public class FhirEncounterServiceImplTest {
 		    dateRangeParam);
 		
 		fhirEncounter.setId(ENCOUNTER_UUID);
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(encounters);
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(encounters);
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
@@ -149,15 +149,15 @@ public class FhirEncounterServiceImplTest {
 		location.addValue(new ReferenceOrListParam()
 		        .add(new ReferenceParam().setValue(ENCOUNTER_ADDRESS_STATE).setChain(Location.SP_ADDRESS_STATE)));
 		
-		Collection<Encounter> encounters = new ArrayList<>();
+		List<Encounter> encounters = new ArrayList<>();
 		encounters.add(openMrsEncounter);
 		fhirEncounter.setId(ENCOUNTER_UUID);
 		
 		SearchParameterMap theParams = new SearchParameterMap().addParameter(FhirConstants.LOCATION_REFERENCE_SEARCH_HANDLER,
 		    location);
 		
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(encounters);
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(encounters);
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
@@ -168,7 +168,7 @@ public class FhirEncounterServiceImplTest {
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -178,7 +178,7 @@ public class FhirEncounterServiceImplTest {
 		participant.addValue(new ReferenceOrListParam()
 		        .add(new ReferenceParam().setValue(PARTICIPANT_IDENTIFIER).setChain(Practitioner.SP_IDENTIFIER)));
 		
-		Collection<Encounter> encounters = new ArrayList<>();
+		List<Encounter> encounters = new ArrayList<>();
 		encounters.add(openMrsEncounter);
 		
 		fhirEncounter.setId(ENCOUNTER_UUID);
@@ -186,8 +186,8 @@ public class FhirEncounterServiceImplTest {
 		SearchParameterMap theParams = new SearchParameterMap()
 		        .addParameter(FhirConstants.PARTICIPANT_REFERENCE_SEARCH_HANDLER, participant);
 		
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(encounters);
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(encounters);
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
@@ -198,7 +198,7 @@ public class FhirEncounterServiceImplTest {
 		
 		assertThat(results, Matchers.notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -208,7 +208,7 @@ public class FhirEncounterServiceImplTest {
 		subject.addValue(
 		    new ReferenceOrListParam().add(new ReferenceParam().setValue(PATIENT_FAMILY_NAME).setChain(Patient.SP_FAMILY)));
 		
-		Collection<Encounter> encounters = new ArrayList<>();
+		List<Encounter> encounters = new ArrayList<>();
 		encounters.add(openMrsEncounter);
 		
 		fhirEncounter.setId(ENCOUNTER_UUID);
@@ -216,8 +216,8 @@ public class FhirEncounterServiceImplTest {
 		SearchParameterMap theParams = new SearchParameterMap().addParameter(FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER,
 		    subject);
 		
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(encounters);
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(encounters);
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
@@ -228,7 +228,7 @@ public class FhirEncounterServiceImplTest {
 		
 		assertThat(results, Matchers.notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -238,8 +238,8 @@ public class FhirEncounterServiceImplTest {
 		SearchParameterMap theParams = new SearchParameterMap().addParameter(FhirConstants.COMMON_SEARCH_HANDLER,
 		    FhirConstants.ID_PROPERTY, uuid);
 		
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(openMrsEncounter));
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(openMrsEncounter));
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
@@ -250,7 +250,7 @@ public class FhirEncounterServiceImplTest {
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -260,8 +260,8 @@ public class FhirEncounterServiceImplTest {
 		SearchParameterMap theParams = new SearchParameterMap().addParameter(FhirConstants.COMMON_SEARCH_HANDLER,
 		    FhirConstants.LAST_UPDATED_PROPERTY, lastUpdated);
 		
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(openMrsEncounter));
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(openMrsEncounter));
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(ENCOUNTER_UUID));
 		when(encounterTranslator.toFhirResource(openMrsEncounter)).thenReturn(fhirEncounter);
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, encounterTranslator, globalPropertyService));
@@ -272,7 +272,7 @@ public class FhirEncounterServiceImplTest {
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 }

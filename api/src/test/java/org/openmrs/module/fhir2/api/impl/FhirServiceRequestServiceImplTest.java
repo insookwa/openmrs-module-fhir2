@@ -14,6 +14,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -120,8 +121,8 @@ public class FhirServiceRequestServiceImplTest {
 		SearchParameterMap theParams = new SearchParameterMap().addParameter(FhirConstants.COMMON_SEARCH_HANDLER,
 		    FhirConstants.ID_PROPERTY, uuid);
 		
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(order));
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(SERVICE_REQUEST_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(order));
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(SERVICE_REQUEST_UUID));
 		when(translator.toFhirResource(order)).thenReturn(fhirServiceRequest);
 		
 		when(searchQuery.getQueryResults(any(), any(), any()))
@@ -133,7 +134,7 @@ public class FhirServiceRequestServiceImplTest {
 		
 		assertThat(results, Matchers.notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -143,8 +144,8 @@ public class FhirServiceRequestServiceImplTest {
 		SearchParameterMap theParams = new SearchParameterMap().addParameter(FhirConstants.COMMON_SEARCH_HANDLER,
 		    FhirConstants.LAST_UPDATED_PROPERTY, lastUpdated);
 		
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(order));
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(SERVICE_REQUEST_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(order));
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(SERVICE_REQUEST_UUID));
 		when(translator.toFhirResource(order)).thenReturn(fhirServiceRequest);
 		
 		when(searchQuery.getQueryResults(any(), any(), any()))
@@ -156,7 +157,7 @@ public class FhirServiceRequestServiceImplTest {
 		
 		assertThat(results, Matchers.notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 }

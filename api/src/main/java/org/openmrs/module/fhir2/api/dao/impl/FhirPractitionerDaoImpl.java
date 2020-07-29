@@ -9,24 +9,17 @@
  */
 package org.openmrs.module.fhir2.api.dao.impl;
 
-import static org.hibernate.criterion.Restrictions.and;
 import static org.hibernate.criterion.Restrictions.eq;
-import static org.hibernate.criterion.Restrictions.isNull;
-import static org.hibernate.criterion.Restrictions.or;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import ca.uhn.fhir.rest.param.DateRangeParam;
 import ca.uhn.fhir.rest.param.StringAndListParam;
 import ca.uhn.fhir.rest.param.TokenAndListParam;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.sql.JoinType;
 import org.openmrs.Provider;
 import org.openmrs.ProviderAttribute;
@@ -38,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Setter(AccessLevel.PACKAGE)
-public class FhirPractitionerDaoImpl extends BaseFhirDao<Provider> implements FhirPractitionerDao {
+public class FhirPractitionerDaoImpl extends BasePersonDao<Provider> implements FhirPractitionerDao {
 	
 	@Override
 	protected void setupSearchParams(Criteria criteria, SearchParameterMap theParams) {
@@ -66,46 +59,13 @@ public class FhirPractitionerDaoImpl extends BaseFhirDao<Provider> implements Fh
 	}
 	
 	@Override
-	protected Optional<Criterion> getCriteriaForLastUpdated(DateRangeParam param) {
-		List<Optional<Criterion>> criterionList = new ArrayList<>();
-		
-		criterionList.add(handleDateRange("dateRetired", param));
-		
-		criterionList.add(Optional.of(
-		    and(toCriteriaArray(Stream.of(Optional.of(isNull("dateRetired")), handleDateRange("dateChanged", param))))));
-		
-		criterionList.add(Optional.of(and(toCriteriaArray(Stream.of(Optional.of(isNull("dateRetired")),
-		    Optional.of(isNull("dateChanged")), handleDateRange("dateCreated", param))))));
-		
-		return Optional.of(or(toCriteriaArray(criterionList)));
+	protected String getSqlAlias() {
+		return "p_";
 	}
 	
-	private void handleAddresses(Criteria criteria, Map.Entry<String, List<PropParam<?>>> entry) {
-		StringAndListParam city = null;
-		StringAndListParam country = null;
-		StringAndListParam postalCode = null;
-		StringAndListParam state = null;
-		for (PropParam<?> param : entry.getValue()) {
-			switch (param.getPropertyName()) {
-				case FhirConstants.CITY_PROPERTY:
-					city = ((StringAndListParam) param.getParam());
-					break;
-				case FhirConstants.STATE_PROPERTY:
-					state = ((StringAndListParam) param.getParam());
-					break;
-				case FhirConstants.POSTAL_CODE_PROPERTY:
-					postalCode = ((StringAndListParam) param.getParam());
-					break;
-				case FhirConstants.COUNTRY_PROPERTY:
-					country = ((StringAndListParam) param.getParam());
-					break;
-			}
-		}
-		
-		handlePersonAddress("pad", city, state, postalCode, country).ifPresent(c -> {
-			criteria.createAlias("p.addresses", "pad");
-			criteria.add(c);
-		});
+	@Override
+	protected String getPersonProperty() {
+		return "p";
 	}
 	
 	private void handleGivenAndFamilyNames(Criteria criteria, Map.Entry<String, List<PropParam<?>>> entry) {

@@ -106,9 +106,9 @@ public class FhirObservationServiceImplTest {
 		SearchParameterMap theParams = new SearchParameterMap();
 		theParams.addParameter(FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER, patientReference);
 		
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(OBS_UUID));
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(obs));
 		when(globalPropertyService.getGlobalProperty(anyString(), anyInt())).thenReturn(10);
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(OBS_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(obs));
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator, globalPropertyService));
 		when(translator.toFhirResource(obs)).thenReturn(observation);

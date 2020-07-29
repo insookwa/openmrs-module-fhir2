@@ -13,8 +13,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,7 @@ import org.openmrs.module.fhir2.api.FhirGlobalPropertyService;
 import org.openmrs.module.fhir2.api.dao.FhirDao;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 import org.openmrs.module.fhir2.api.translators.ToFhirTranslator;
+import org.springframework.transaction.annotation.Transactional;
 
 public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U extends IBaseResource> implements IBundleProvider, Serializable {
 	
@@ -68,10 +71,15 @@ public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U ex
 	}
 	
 	@Nonnull
+	@Transactional(readOnly = true)
 	@Override
 	public List<IBaseResource> getResources(int fromIndex, int toIndex) {
-		if (this.matchingResourceUuids == null) {
-			this.matchingResourceUuids = dao.getResultUuids(theParams);
+		if (matchingResourceUuids == null) {
+			matchingResourceUuids = dao.getSearchResultUuids(theParams);
+		}
+		
+		if (matchingResourceUuids.isEmpty()) {
+			return Collections.emptyList();
 		}
 		
 		int firstResult = 0;
@@ -79,12 +87,17 @@ public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U ex
 			firstResult = fromIndex;
 		}
 		
-		int lastResult = this.size();
+		// NPE-safe unboxing
+		int lastResult = Integer.MAX_VALUE;
+		Integer lastResultHolder = this.size();
+		lastResult = lastResultHolder == null ? lastResult : lastResultHolder;
+		
 		if (toIndex - firstResult > 0) {
 			lastResult = Math.min(lastResult, toIndex);
 		}
-		return dao.search(this.theParams, this.matchingResourceUuids, firstResult, lastResult).stream()
-		        .map(translator::toFhirResource).collect(Collectors.toList());
+		
+		return dao.getSearchResults(this.theParams, this.matchingResourceUuids, firstResult, lastResult).stream()
+		        .map(translator::toFhirResource).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 	
 	@Nullable
@@ -105,12 +118,12 @@ public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U ex
 	@Nullable
 	@Override
 	public Integer size() {
-		if (this.matchingResourceUuids == null) {
-			this.matchingResourceUuids = dao.getResultUuids(theParams);
+		if (matchingResourceUuids == null) {
+			matchingResourceUuids = dao.getSearchResultUuids(theParams);
 		}
 		
 		if (count == null) {
-			count = this.matchingResourceUuids.size();
+			count = matchingResourceUuids.size();
 		}
 		
 		return count;

@@ -47,8 +47,6 @@ public class FhirConditionDaoImpl_2_2Test extends BaseModuleContextSensitiveTest
 	
 	private static final String CONDITION_INITIAL_DATA_XML = "org/openmrs/module/fhir2/api/dao/impl/FhirConditionDaoImplTest_initial_data.xml";
 	
-	private static final String END_REASON = "End reason";
-	
 	private static final Integer PATIENT_ID = 6;
 	
 	private static final Integer CONDITION_ID = 9;

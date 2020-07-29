@@ -15,6 +15,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -124,7 +125,7 @@ public class FhirConditionServiceImpl_2_2Test {
 		condition.setId(CONDITION_UUID);
 		
 		when(conditionTranslator.toFhirResource(openMrsCondition)).thenReturn(condition);
-		when(dao.saveCondition(openMrsCondition)).thenReturn(openMrsCondition);
+		when(dao.createOrUpdate(openMrsCondition)).thenReturn(openMrsCondition);
 		when(conditionTranslator.toOpenmrsType(condition)).thenReturn(openMrsCondition);
 		
 		org.hl7.fhir.r4.model.Condition result = conditionService.saveCondition(condition);
@@ -169,8 +170,8 @@ public class FhirConditionServiceImpl_2_2Test {
 		        .addParameter(FhirConstants.COMMON_SEARCH_HANDLER, FhirConstants.LAST_UPDATED_PROPERTY, lastUpdated)
 		        .setSortSpec(sort);
 		
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(CONDITION_UUID));
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(openmrsCondition));
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(CONDITION_UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(openmrsCondition));
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, conditionTranslator, globalPropertyService));
 		when(conditionTranslator.toFhirResource(openmrsCondition)).thenReturn(fhirCondition);
@@ -182,6 +183,6 @@ public class FhirConditionServiceImpl_2_2Test {
 		
 		assertThat(result, notNullValue());
 		assertThat(resultList, not(empty()));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 }

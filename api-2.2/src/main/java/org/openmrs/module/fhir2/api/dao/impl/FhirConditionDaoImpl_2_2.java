@@ -12,10 +12,8 @@ package org.openmrs.module.fhir2.api.dao.impl;
 import static org.hibernate.criterion.Restrictions.and;
 import static org.hibernate.criterion.Restrictions.eq;
 import static org.hibernate.criterion.Restrictions.ge;
-import static org.hibernate.criterion.Restrictions.isNull;
 import static org.hibernate.criterion.Restrictions.le;
 import static org.hibernate.criterion.Restrictions.not;
-import static org.hibernate.criterion.Restrictions.or;
 
 import javax.validation.constraints.NotNull;
 
@@ -27,11 +25,9 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import ca.uhn.fhir.rest.param.DateRangeParam;
 import ca.uhn.fhir.rest.param.ParamPrefixEnum;
@@ -91,8 +87,8 @@ public class FhirConditionDaoImpl_2_2 extends BaseFhirDao<Condition> implements 
 	
 	@Override
 	@Authorized(PrivilegeConstants.GET_CONDITIONS)
-	public List<Condition> getSearchResults(SearchParameterMap theParams, List matchingResourceUuids, int firstResult,
-	        int lastResult) {
+	public List<Condition> getSearchResults(SearchParameterMap theParams, List<String> matchingResourceUuids,
+	        int firstResult, int lastResult) {
 		return super.getSearchResults(theParams, matchingResourceUuids, firstResult, lastResult);
 	}
 	
@@ -239,15 +235,8 @@ public class FhirConditionDaoImpl_2_2 extends BaseFhirDao<Condition> implements 
 	}
 	
 	@Override
-	protected Optional<Criterion> getCriteriaForLastUpdated(DateRangeParam param) {
-		List<Optional<Criterion>> criterionList = new ArrayList<>();
-		
-		criterionList.add(handleDateRange("dateVoided", param));
-		
-		criterionList.add(Optional.of(
-		    and(toCriteriaArray(Stream.of(Optional.of(isNull("dateVoided")), handleDateRange("dateCreated", param))))));
-		
-		return Optional.of(or(toCriteriaArray(criterionList)));
+	protected Optional<Criterion> handleLastUpdated(DateRangeParam param) {
+		return super.handleLastUpdatedImmutable(param);
 	}
 	
 	private void handleCode(Criteria criteria, TokenAndListParam code) {

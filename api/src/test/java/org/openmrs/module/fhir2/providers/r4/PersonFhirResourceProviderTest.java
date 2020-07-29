@@ -13,6 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
@@ -159,7 +160,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -176,7 +177,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -193,7 +194,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -210,7 +211,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -227,7 +228,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -245,7 +246,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -263,7 +264,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -280,7 +281,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test
@@ -298,7 +299,7 @@ public class PersonFhirResourceProviderTest extends BaseFhirProvenanceResourceTe
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.iterator().next().fhirType(), is(FhirConstants.PERSON));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 	}
 	
 	@Test

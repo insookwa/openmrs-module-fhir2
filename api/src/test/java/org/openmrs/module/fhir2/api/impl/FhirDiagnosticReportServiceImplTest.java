@@ -189,8 +189,8 @@ public class FhirDiagnosticReportServiceImplTest {
 		
 		SearchParameterMap theParams = new SearchParameterMap();
 		
-		when(dao.search(any(), any(), anyInt(), anyInt())).thenReturn(obsList);
-		when(dao.getResultUuids(any())).thenReturn(Collections.singletonList(UUID));
+		when(dao.getSearchResults(any(), any(), anyInt(), anyInt())).thenReturn(obsList);
+		when(dao.getSearchResultUuids(any())).thenReturn(Collections.singletonList(UUID));
 		when(translator.toFhirResource(obs)).thenReturn(diagnosticReport);
 		when(searchQuery.getQueryResults(any(), any(), any()))
 		        .thenReturn(new SearchQueryBundleProvider<>(theParams, dao, translator, globalPropertyService));

@@ -47,6 +47,7 @@ public abstract class BaseMapping {
 		return Optional.ofNullable(openmrsToFhir.getOrDefault(openmrsCode, null));
 	}
 	
+	@SuppressWarnings("UnstableApiUsage")
 	private void setupDelegates() {
 		if (fhirToOpenmrs == null) {
 			synchronized (this) {

@@ -14,6 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
@@ -165,7 +166,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -185,7 +186,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -205,7 +206,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -226,7 +227,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -246,7 +247,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -266,7 +267,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -286,7 +287,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -306,7 +307,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -326,7 +327,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -346,7 +347,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -366,7 +367,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
@@ -386,7 +387,7 @@ public class AllergyIntoleranceFhirResourceProviderTest extends BaseFhirProvenan
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
-		assertThat(resultList.size(), greaterThanOrEqualTo(1));
+		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(((AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
 	}
 	
