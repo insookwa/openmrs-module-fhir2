@@ -40,23 +40,16 @@ public class FhirConstants {
 	
 	public static final String CONDITION_CLINICAL_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX + "/condition-clinical ";
 	
-	public static final String ALLERGY_SUBSTANCE_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX + "/substance-code";
-	
 	public static final String CLINICAL_FINDINGS_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX + "/clinical-findings";
 	
 	public static final String MEDICATION_CODES_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX + "/medication-codes";
 	
 	public static final String MEDICATION_FORM_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX + "/medication-form-codes";
 	
-	public static final String MEDICATION_INGREDIENT_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX
-	        + "/medication-ingredient-codes";
-	
 	public static final String ALLERGY_INTOLERANCE_CLINICAL_STATUS_VALUE_SET = HL7_FHIR_CODE_SYSTEM_PREFIX
 	        + "/allergyintolerance-clinical";
 	
 	public static final String TASK_STATUS_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX + "/task-status";
-	
-	public static final String RESOURCE_TYPES_VALUE_SET_URI = HL7_FHIR_VALUE_SET_PREFIX + "/resource-types";
 	
 	public static final String OBSERVATION_REFERENCE_RANGE_VALUE_SET_URI = HL7_FHIR_CODE_SYSTEM_PREFIX
 	        + "/referencerange-meaning";
