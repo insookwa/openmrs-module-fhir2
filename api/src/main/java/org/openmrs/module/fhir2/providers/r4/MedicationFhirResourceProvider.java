@@ -65,11 +65,10 @@ public class MedicationFhirResourceProvider implements IResourceProvider {
 	@SuppressWarnings("unused")
 	public IBundleProvider searchForMedication(@OptionalParam(name = Medication.SP_CODE) TokenAndListParam code,
 	        @OptionalParam(name = Medication.SP_FORM) TokenAndListParam dosageForm,
-	        @OptionalParam(name = Medication.SP_STATUS) TokenAndListParam status,
 	        @OptionalParam(name = Medication.SP_INGREDIENT_CODE) TokenAndListParam ingredientCode,
 	        @OptionalParam(name = Medication.SP_RES_ID) TokenAndListParam id,
 	        @OptionalParam(name = "_lastUpdated") DateRangeParam lastUpdated) {
-		return fhirMedicationService.searchForMedications(code, dosageForm, ingredientCode, status, id, lastUpdated);
+		return fhirMedicationService.searchForMedications(code, dosageForm, ingredientCode, id, lastUpdated);
 	}
 	
 	@Create

@@ -53,11 +53,6 @@ public class FhirMedicationDaoImpl extends BaseFhirDao<Drug> implements FhirMedi
 				case FhirConstants.INGREDIENT_SEARCH_HANDLER:
 					entry.getValue().forEach(param -> handleIngredientCode(criteria, (TokenAndListParam) param.getParam()));
 					break;
-				case FhirConstants.BOOLEAN_SEARCH_HANDLER:
-					entry.getValue().forEach(
-					    param -> handleBoolean("retired", convertStringStatusToBoolean((TokenAndListParam) param.getParam()))
-					            .ifPresent(criteria::add));
-					break;
 				case FhirConstants.COMMON_SEARCH_HANDLER:
 					handleCommonSearchParameters(entry.getValue()).ifPresent(criteria::add);
 					break;

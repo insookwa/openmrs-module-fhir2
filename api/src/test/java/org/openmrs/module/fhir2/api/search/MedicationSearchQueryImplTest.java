@@ -191,18 +191,6 @@ public class MedicationSearchQueryImplTest extends BaseModuleContextSensitiveTes
 	}
 	
 	@Test
-	public void searchForMedications_shouldSearchMedicationsByActiveStatus() {
-		TokenAndListParam status = new TokenAndListParam().addAnd(new TokenParam("active"));
-		
-		SearchParameterMap theParams = new SearchParameterMap().addParameter(FhirConstants.BOOLEAN_SEARCH_HANDLER, status);
-		
-		IBundleProvider result = search(theParams);
-		
-		assertThat(result, notNullValue());
-		assertThat(result.size(), equalTo(4));
-	}
-	
-	@Test
 	public void searchForMedications_shouldSearchForMedicationsByUuid() {
 		TokenAndListParam uuid = new TokenAndListParam().addAnd(new TokenParam(MEDICATION_UUID));
 		
