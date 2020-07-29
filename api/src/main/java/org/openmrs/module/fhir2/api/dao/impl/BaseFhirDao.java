@@ -16,7 +16,6 @@ import static org.hibernate.criterion.Restrictions.isNull;
 import static org.hibernate.criterion.Restrictions.or;
 import static org.hibernate.criterion.Subqueries.propertyIn;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -164,52 +163,15 @@ public abstract class BaseFhirDao<T extends OpenmrsObject & Auditable> extends B
 	
 	@Override
 	protected Optional<Criterion> handleLastUpdated(DateRangeParam param) {
-		if (isVoidable) {
-			return handleLastUpdatedVoidable(param);
-		} else if (isRetireable) {
-			return handleLastUpdatedRetireable(param);
-		}
-		
-		return Optional.empty();
+		// @formatter:off
+		return Optional.of(or(toCriteriaArray(handleDateRange("dateChanged", param), Optional.of(
+		    and(toCriteriaArray(Stream.of(Optional.of(isNull("dateChanged")), handleDateRange("dateCreated", param))))))));
+		// @formatter:on
 	}
 	
+	// Implementation of handleLastUpdated for "immutable" types, that is, those that cannot be changed
 	protected Optional<Criterion> handleLastUpdatedImmutable(DateRangeParam param) {
-		List<Optional<Criterion>> criterionList = new ArrayList<>();
-		
-		criterionList.add(handleDateRange("dateVoided", param));
-		
-		criterionList.add(Optional.of(
-		    and(toCriteriaArray(Stream.of(Optional.of(isNull("dateVoided")), handleDateRange("dateCreated", param))))));
-		
-		return Optional.of(or(toCriteriaArray(criterionList)));
-	}
-	
-	protected Optional<Criterion> handleLastUpdatedRetireable(DateRangeParam param) {
-		List<Optional<Criterion>> criterionList = new ArrayList<>();
-		
-		criterionList.add(handleDateRange("dateRetired", param));
-		
-		criterionList.add(Optional.of(
-		    and(toCriteriaArray(Stream.of(Optional.of(isNull("dateRetired")), handleDateRange("dateChanged", param))))));
-		
-		criterionList.add(Optional.of(and(toCriteriaArray(Stream.of(Optional.of(isNull("dateRetired")),
-		    Optional.of(isNull("dateChanged")), handleDateRange("dateCreated", param))))));
-		
-		return Optional.of(or(toCriteriaArray(criterionList)));
-	}
-	
-	protected Optional<Criterion> handleLastUpdatedVoidable(DateRangeParam param) {
-		List<Optional<Criterion>> criterionList = new ArrayList<>();
-		
-		criterionList.add(handleDateRange("dateVoided", param));
-		
-		criterionList.add(Optional.of(
-		    and(toCriteriaArray(Stream.of(Optional.of(isNull("dateVoided")), handleDateRange("dateChanged", param))))));
-		
-		criterionList.add(Optional.of(and(toCriteriaArray(Stream.of(Optional.of(isNull("dateVoided")),
-		    Optional.of(isNull("dateChanged")), handleDateRange("dateCreated", param))))));
-		
-		return Optional.of(or(toCriteriaArray(criterionList)));
+		return handleDateRange("dateCreated", param);
 	}
 	
 	/**
