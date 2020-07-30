@@ -27,6 +27,7 @@ import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.openmrs.module.fhir2.api.FhirServiceRequestService;
+import org.openmrs.module.fhir2.api.search.SearchQueryBundleProviderR3Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -58,6 +59,6 @@ public class ProcedureRequestFhirResourceProvider implements IResourceProvider {
 	public IBundleProvider searchForProcedureRequests(
 	        @OptionalParam(name = ProcedureRequest.SP_RES_ID) TokenAndListParam uuid,
 	        @OptionalParam(name = "_lastUpdated") DateRangeParam lastUpdated) {
-		return serviceRequestService.searchForServiceRequests(uuid, lastUpdated);
+		return new SearchQueryBundleProviderR3Wrapper(serviceRequestService.searchForServiceRequests(uuid, lastUpdated));
 	}
 }

@@ -11,7 +11,6 @@ package org.openmrs.module.fhir2.providers.r3;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -24,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
@@ -42,7 +42,6 @@ import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Provenance;
 import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,8 +87,9 @@ public class EncounterFhirResourceProviderTest extends BaseFhirR3ProvenanceResou
 		setProvenanceResources(encounter);
 	}
 	
-	private List<IBaseResource> get(IBundleProvider results) {
-		return results.getResources(START_INDEX, END_INDEX);
+	private List<Encounter> get(IBundleProvider results) {
+		return results.getResources(START_INDEX, END_INDEX).stream().filter(it -> it instanceof Encounter)
+		        .map(it -> (Encounter) it).collect(Collectors.toList());
 	}
 	
 	@Test
@@ -114,8 +114,8 @@ public class EncounterFhirResourceProviderTest extends BaseFhirR3ProvenanceResou
 	public void getEncounterWithWrongUuid_shouldThrowResourceNotFoundException() {
 		IdType id = new IdType();
 		id.setValue(WRONG_ENCOUNTER_UUID);
-		Encounter result = resourceProvider.getEncounterById(id);
-		assertThat(result, nullValue());
+		
+		resourceProvider.getEncounterById(id);
 	}
 	
 	@Test
@@ -130,12 +130,12 @@ public class EncounterFhirResourceProviderTest extends BaseFhirR3ProvenanceResou
 		
 		IBundleProvider results = resourceProvider.searchEncounter(null, null, null, subjectReference, null, null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<Encounter> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.ENCOUNTER));
-		assertThat(((org.hl7.fhir.r4.model.Encounter) resultList.iterator().next()).getId(), equalTo(ENCOUNTER_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ENCOUNTER_UUID));
 	}
 	
 	@Test
@@ -150,12 +150,12 @@ public class EncounterFhirResourceProviderTest extends BaseFhirR3ProvenanceResou
 		
 		IBundleProvider results = resourceProvider.searchEncounter(null, null, null, null, patientParam, null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<Encounter> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
 		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.ENCOUNTER));
-		assertThat(((org.hl7.fhir.r4.model.Encounter) resultList.iterator().next()).getId(), equalTo(ENCOUNTER_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ENCOUNTER_UUID));
 	}
 	
 	@Test
@@ -222,7 +222,7 @@ public class EncounterFhirResourceProviderTest extends BaseFhirR3ProvenanceResou
 		when(encounterService.delete(ENCOUNTER_UUID)).thenReturn(encounter);
 		
 		OperationOutcome result = resourceProvider.deleteEncounter(new IdType().setValue(ENCOUNTER_UUID));
-		assertThat(result, CoreMatchers.notNullValue());
+		assertThat(result, notNullValue());
 		assertThat(result.getIssue(), notNullValue());
 		assertThat(result.getIssueFirstRep().getSeverity(), equalTo(OperationOutcome.IssueSeverity.INFORMATION));
 		assertThat(result.getIssueFirstRep().getDetails().getCodingFirstRep().getCode(), equalTo("MSG_DELETED"));

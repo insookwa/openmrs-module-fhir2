@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
@@ -44,7 +45,6 @@ import org.hl7.fhir.dstu3.model.MedicationRequest;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -105,8 +105,9 @@ public class MedicationRequestFhirResourceProviderTest {
 		assertThat(medicationRequest, nullValue());
 	}
 	
-	private List<IBaseResource> getResources(IBundleProvider results, int theFromIndex, int theToIndex) {
-		return results.getResources(theFromIndex, theToIndex);
+	private List<MedicationRequest> get(IBundleProvider results, int theFromIndex, int theToIndex) {
+		return results.getResources(theFromIndex, theToIndex).stream().filter(it -> it instanceof MedicationRequest)
+		        .map(it -> (MedicationRequest) it).collect(Collectors.toList());
 	}
 	
 	@Test
@@ -123,7 +124,7 @@ public class MedicationRequestFhirResourceProviderTest {
 		IBundleProvider results = resourceProvider.searchForMedicationRequests(null, null, null, code, null, null, null,
 		    null);
 		
-		List<IBaseResource> resources = getResources(results, 1, 5);
+		List<MedicationRequest> resources = get(results, 1, 5);
 		
 		assertThat(results, notNullValue());
 		assertThat(resources, hasSize(equalTo(1)));
@@ -144,7 +145,7 @@ public class MedicationRequestFhirResourceProviderTest {
 		IBundleProvider results = resourceProvider.searchForMedicationRequests(patientParam, null, null, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resources = getResources(results, 1, 5);
+		List<MedicationRequest> resources = get(results, 1, 5);
 		
 		assertThat(results, notNullValue());
 		assertThat(resources, hasSize(equalTo(1)));
@@ -165,7 +166,7 @@ public class MedicationRequestFhirResourceProviderTest {
 		IBundleProvider results = resourceProvider.searchForMedicationRequests(null, null, null, null, null, medicationParam,
 		    null, null);
 		
-		List<IBaseResource> resources = getResources(results, 1, 5);
+		List<MedicationRequest> resources = get(results, 1, 5);
 		
 		assertThat(results, notNullValue());
 		assertThat(resources, hasSize(equalTo(1)));
@@ -186,7 +187,7 @@ public class MedicationRequestFhirResourceProviderTest {
 		IBundleProvider results = resourceProvider.searchForMedicationRequests(null, null, null, null, participantParam,
 		    null, null, null);
 		
-		List<IBaseResource> resources = getResources(results, 1, 5);
+		List<MedicationRequest> resources = get(results, 1, 5);
 		
 		assertThat(results, notNullValue());
 		assertThat(resources, hasSize(equalTo(1)));
@@ -207,7 +208,7 @@ public class MedicationRequestFhirResourceProviderTest {
 		IBundleProvider results = resourceProvider.searchForMedicationRequests(null, null, encounterParam, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resources = getResources(results, 1, 5);
+		List<MedicationRequest> resources = get(results, 1, 5);
 		
 		assertThat(results, notNullValue());
 		assertThat(resources, hasSize(equalTo(1)));
@@ -226,7 +227,7 @@ public class MedicationRequestFhirResourceProviderTest {
 		IBundleProvider results = resourceProvider.searchForMedicationRequests(null, null, null, null, null, null, uuid,
 		    null);
 		
-		List<IBaseResource> resources = getResources(results, 1, 5);
+		List<MedicationRequest> resources = get(results, 1, 5);
 		
 		assertThat(results, notNullValue());
 		assertThat(resources, hasSize(equalTo(1)));
@@ -245,7 +246,7 @@ public class MedicationRequestFhirResourceProviderTest {
 		IBundleProvider results = resourceProvider.searchForMedicationRequests(null, null, null, null, null, null, null,
 		    lastUpdated);
 		
-		List<IBaseResource> resources = getResources(results, 1, 5);
+		List<MedicationRequest> resources = get(results, 1, 5);
 		
 		assertThat(results, notNullValue());
 		assertThat(resources, hasSize(equalTo(1)));

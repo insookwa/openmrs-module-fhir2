@@ -18,11 +18,14 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.SortSpec;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.param.DateRangeParam;
@@ -37,12 +40,12 @@ import ca.uhn.fhir.rest.param.TokenOrListParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hamcrest.Matchers;
+import org.hl7.fhir.convertors.conv30_40.Condition30_40;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Provenance;
 import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,8 +88,9 @@ public class ConditionFhirR3ResourceProviderTest extends BaseFhirR3ProvenanceRes
 		setProvenanceResources(condition);
 	}
 	
-	private List<IBaseResource> get(IBundleProvider results) {
-		return results.getResources(START_INDEX, END_INDEX);
+	private List<Condition> get(IBundleProvider results) {
+		return results.getResources(START_INDEX, END_INDEX).stream().filter(it -> it instanceof Condition)
+		        .map(it -> (Condition) it).collect(Collectors.toList());
 	}
 	
 	@Test
@@ -135,15 +139,16 @@ public class ConditionFhirR3ResourceProviderTest extends BaseFhirR3ProvenanceRes
 		assertThat(resourceProvider.getConditionHistoryById(idType).size(), Matchers.equalTo(0));
 	}
 	
-	//	@Test
-	//	public void shouldCreateNewCondition() {
-	//		when(conditionService.saveCondition(condition)).thenReturn(condition);
-	//
-	//		MethodOutcome result = resourceProvider.createCondition(condition);
-	//		assertThat(result, notNullValue());
-	//		assertThat(result.getCreated(), is(true));
-	//		assertThat(result.getResource(), equalTo(condition));
-	//	}
+	@Test
+	public void shouldCreateNewCondition() {
+		when(conditionService.saveCondition(any())).thenReturn(condition);
+		
+		MethodOutcome result = resourceProvider.createCondition(Condition30_40.convertCondition(condition));
+		
+		assertThat(result, notNullValue());
+		assertThat(result.getCreated(), is(true));
+		assertThat(result.getResource().getIdElement().getIdPart(), equalTo(condition.getId()));
+	}
 	
 	@Test
 	public void searchConditions_shouldReturnConditionReturnedByService() {
@@ -179,11 +184,11 @@ public class ConditionFhirR3ResourceProviderTest extends BaseFhirR3ProvenanceRes
 		IBundleProvider result = resourceProvider.searchConditions(patientReference, subjectReference, codeList,
 		    clinicalList, onsetDate, onsetAge, recordDate, uuid, lastUpdated, sort);
 		
-		List<IBaseResource> resultList = get(result);
+		List<Condition> resultList = get(result);
 		
 		assertThat(result, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(resultList.iterator().next().fhirType(), equalTo(FhirConstants.CONDITION));
+		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.CONDITION));
 	}
 	
 	@Test
@@ -217,10 +222,10 @@ public class ConditionFhirR3ResourceProviderTest extends BaseFhirR3ProvenanceRes
 		IBundleProvider result = resourceProvider.searchConditions(subjectReference, subjectReference, codeList,
 		    clinicalList, onsetDate, onsetAge, recordDate, uuid, lastUpdated, sort);
 		
-		List<IBaseResource> resultList = get(result);
+		List<Condition> resultList = get(result);
 		
 		assertThat(result, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(resultList.iterator().next().fhirType(), equalTo(FhirConstants.CONDITION));
+		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.CONDITION));
 	}
 }

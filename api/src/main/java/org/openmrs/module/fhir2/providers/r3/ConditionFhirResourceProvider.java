@@ -39,6 +39,7 @@ import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.openmrs.module.fhir2.api.FhirConditionService;
+import org.openmrs.module.fhir2.api.search.SearchQueryBundleProviderR3Wrapper;
 import org.openmrs.module.fhir2.providers.util.FhirProviderUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -79,7 +80,8 @@ public class ConditionFhirResourceProvider implements IResourceProvider {
 	@Create
 	@SuppressWarnings("unused")
 	public MethodOutcome createCondition(@ResourceParam Condition newCondition) {
-		return FhirProviderUtils.buildCreate(conditionService.saveCondition(Condition30_40.convertCondition(newCondition)));
+		return FhirProviderUtils.buildCreate(
+		    Condition30_40.convertCondition(conditionService.saveCondition(Condition30_40.convertCondition(newCondition))));
 	}
 	
 	@Search
@@ -99,7 +101,7 @@ public class ConditionFhirResourceProvider implements IResourceProvider {
 			patientParam = subjectParam;
 		}
 		
-		return conditionService.searchConditions(patientParam, code, clinicalStatus, onsetDate, onsetAge, recordedDate, id,
-		    lastUpdated, sort);
+		return new SearchQueryBundleProviderR3Wrapper(conditionService.searchConditions(patientParam, code, clinicalStatus,
+		    onsetDate, onsetAge, recordedDate, id, lastUpdated, sort));
 	}
 }

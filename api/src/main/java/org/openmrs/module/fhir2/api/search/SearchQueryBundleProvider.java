@@ -20,10 +20,11 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import ca.uhn.fhir.model.primitive.InstantDt;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
+import lombok.Getter;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
-import org.hl7.fhir.r4.model.InstantType;
 import org.openmrs.Auditable;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.module.fhir2.FhirConstants;
@@ -35,17 +36,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U extends IBaseResource> implements IBundleProvider, Serializable {
 	
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 4L;
 	
 	private final FhirDao<T> dao;
 	
-	private final Date datePublished;
+	@Getter
+	private final IPrimitiveType<Date> published;
 	
-	private final SearchParameterMap theParams;
+	private final SearchParameterMap searchParameterMap;
 	
 	private final ToFhirTranslator<T, U> translator;
 	
-	private final UUID uuid;
+	@Getter
+	private final String uuid;
 	
 	private final FhirGlobalPropertyService globalPropertyService;
 	
@@ -55,27 +58,22 @@ public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U ex
 	
 	private transient List<String> matchingResourceUuids;
 	
-	public SearchQueryBundleProvider(SearchParameterMap theParams, FhirDao<T> dao, ToFhirTranslator<T, U> translator,
-	    FhirGlobalPropertyService globalPropertyService) {
+	public SearchQueryBundleProvider(SearchParameterMap searchParameterMap, FhirDao<T> dao,
+	    ToFhirTranslator<T, U> translator, FhirGlobalPropertyService globalPropertyService) {
 		this.dao = dao;
-		this.datePublished = new Date();
-		this.theParams = theParams;
+		this.published = InstantDt.withCurrentTime();
+		this.searchParameterMap = searchParameterMap;
 		this.translator = translator;
-		this.uuid = UUID.randomUUID();
+		this.uuid = UUID.randomUUID().toString();
 		this.globalPropertyService = globalPropertyService;
 	}
 	
-	@Override
-	public IPrimitiveType<Date> getPublished() {
-		return new InstantType(datePublished);
-	}
-	
-	@Nonnull
 	@Transactional(readOnly = true)
 	@Override
+	@Nonnull
 	public List<IBaseResource> getResources(int fromIndex, int toIndex) {
 		if (matchingResourceUuids == null) {
-			matchingResourceUuids = dao.getSearchResultUuids(theParams);
+			matchingResourceUuids = dao.getSearchResultUuids(searchParameterMap);
 		}
 		
 		if (matchingResourceUuids.isEmpty()) {
@@ -89,21 +87,15 @@ public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U ex
 		
 		// NPE-safe unboxing
 		int lastResult = Integer.MAX_VALUE;
-		Integer lastResultHolder = this.size();
+		Integer lastResultHolder = size();
 		lastResult = lastResultHolder == null ? lastResult : lastResultHolder;
 		
 		if (toIndex - firstResult > 0) {
 			lastResult = Math.min(lastResult, toIndex);
 		}
 		
-		return dao.getSearchResults(this.theParams, this.matchingResourceUuids, firstResult, lastResult).stream()
+		return dao.getSearchResults(searchParameterMap, matchingResourceUuids, firstResult, lastResult).stream()
 		        .map(translator::toFhirResource).filter(Objects::nonNull).collect(Collectors.toList());
-	}
-	
-	@Nullable
-	@Override
-	public String getUuid() {
-		return uuid.toString();
 	}
 	
 	@Override
@@ -115,11 +107,11 @@ public class SearchQueryBundleProvider<T extends OpenmrsObject & Auditable, U ex
 		return pageSize;
 	}
 	
-	@Nullable
 	@Override
+	@Nullable
 	public Integer size() {
 		if (matchingResourceUuids == null) {
-			matchingResourceUuids = dao.getSearchResultUuids(theParams);
+			matchingResourceUuids = dao.getSearchResultUuids(searchParameterMap);
 		}
 		
 		if (count == null) {

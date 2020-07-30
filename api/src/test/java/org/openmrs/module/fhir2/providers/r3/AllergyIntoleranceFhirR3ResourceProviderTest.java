@@ -26,6 +26,7 @@ import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
@@ -47,7 +48,6 @@ import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Provenance;
 import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -101,8 +101,9 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		setProvenanceResources(allergyIntolerance);
 	}
 	
-	private List<IBaseResource> get(IBundleProvider results) {
-		return results.getResources(START_INDEX, END_INDEX);
+	private List<AllergyIntolerance> get(IBundleProvider results) {
+		return results.getResources(START_INDEX, END_INDEX).stream().filter(it -> it instanceof AllergyIntolerance)
+		        .map(it -> (AllergyIntolerance) it).collect(Collectors.toList());
 	}
 	
 	@Test
@@ -165,12 +166,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(patient, null, null, null, null, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -185,12 +186,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(patient, null, null, null, null, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -205,12 +206,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(patient, null, null, null, null, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -226,12 +227,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(patient, null, null, null, null, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -246,12 +247,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(null, subject, null, null, null, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -266,12 +267,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(null, null, category, null, null, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -286,12 +287,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(null, null, null, allergen, null, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -306,12 +307,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(null, null, null, null, severity, null, null, null,
 		    null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -326,12 +327,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(null, null, null, null, null, manifestation, null,
 		    null, null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -346,12 +347,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(null, null, null, null, null, null, status, null, null,
 		    null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -366,12 +367,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(null, null, null, null, null, null, null, uuid, null,
 		    null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test
@@ -386,12 +387,12 @@ public class AllergyIntoleranceFhirR3ResourceProviderTest extends BaseFhirR3Prov
 		IBundleProvider results = resourceProvider.searchForAllergies(null, null, null, null, null, null, null, null,
 		    dateRangeParam, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<AllergyIntolerance> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList.get(0).fhirType(), is(FhirConstants.ALLERGY_INTOLERANCE));
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(((org.hl7.fhir.r4.model.AllergyIntolerance) resultList.iterator().next()).getId(), equalTo(ALLERGY_UUID));
+		assertThat(resultList.get(0).getId(), equalTo(ALLERGY_UUID));
 	}
 	
 	@Test

@@ -36,7 +36,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.openmrs.module.fhir2.FhirConstants;
 import org.openmrs.module.fhir2.api.FhirServiceRequestService;
 import org.openmrs.module.fhir2.providers.r4.MockIBundleProvider;
 
@@ -119,11 +118,11 @@ public class ProcedureRequestFhirResourceProviderTest {
 		
 		List<IBaseResource> resources = getResources(results);
 		
-		assertThat(results, Matchers.notNullValue());
-		assertThat(resources, hasSize(Matchers.equalTo(1)));
-		assertThat(resources.get(0), Matchers.notNullValue());
-		assertThat(resources.get(0).fhirType(), Matchers.equalTo(FhirConstants.SERVICE_REQUEST));
-		assertThat(resources.get(0).getIdElement().getIdPart(), Matchers.equalTo(SERVICE_REQUEST_UUID));
+		assertThat(results, notNullValue());
+		assertThat(resources, hasSize(equalTo(1)));
+		assertThat(resources.get(0), notNullValue());
+		assertThat(resources.get(0).fhirType(), equalTo(ProcedureRequest.class.getSimpleName()));
+		assertThat(resources.get(0).getIdElement().getIdPart(), equalTo(SERVICE_REQUEST_UUID));
 	}
 	
 	@Test
@@ -140,7 +139,7 @@ public class ProcedureRequestFhirResourceProviderTest {
 		assertThat(results, Matchers.notNullValue());
 		assertThat(resources, hasSize(Matchers.equalTo(1)));
 		assertThat(resources.get(0), Matchers.notNullValue());
-		assertThat(resources.get(0).fhirType(), Matchers.equalTo(FhirConstants.SERVICE_REQUEST));
+		assertThat(resources.get(0).fhirType(), Matchers.equalTo(ProcedureRequest.class.getSimpleName()));
 		assertThat(resources.get(0).getIdElement().getIdPart(), Matchers.equalTo(SERVICE_REQUEST_UUID));
 	}
 }

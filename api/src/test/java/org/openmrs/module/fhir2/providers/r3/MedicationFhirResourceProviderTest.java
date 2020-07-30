@@ -24,6 +24,7 @@ import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
@@ -39,7 +40,6 @@ import org.hl7.fhir.convertors.conv30_40.Medication30_40;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Medication;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,8 +83,9 @@ public class MedicationFhirResourceProviderTest {
 		medication.setId(MEDICATION_UUID);
 	}
 	
-	private List<IBaseResource> get(IBundleProvider results) {
-		return results.getResources(START_INDEX, END_INDEX);
+	private List<Medication> get(IBundleProvider results) {
+		return results.getResources(START_INDEX, END_INDEX).stream().filter(it -> it instanceof Medication)
+		        .map(it -> (Medication) it).collect(Collectors.toList());
 	}
 	
 	@Test
@@ -123,11 +124,11 @@ public class MedicationFhirResourceProviderTest {
 		
 		IBundleProvider results = resourceProvider.searchForMedication(code, null, null, null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<Medication> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(resultList.iterator().next().fhirType(), equalTo(FhirConstants.MEDICATION));
+		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.MEDICATION));
 	}
 	
 	@Test
@@ -140,11 +141,11 @@ public class MedicationFhirResourceProviderTest {
 		
 		IBundleProvider results = resourceProvider.searchForMedication(null, dosageFormCode, null, null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<Medication> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(resultList.iterator().next().fhirType(), equalTo(FhirConstants.MEDICATION));
+		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.MEDICATION));
 	}
 	
 	@Test
@@ -157,11 +158,11 @@ public class MedicationFhirResourceProviderTest {
 		
 		IBundleProvider results = resourceProvider.searchForMedication(null, null, ingredientCode, null, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<Medication> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(resultList.iterator().next().fhirType(), equalTo(FhirConstants.MEDICATION));
+		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.MEDICATION));
 	}
 	
 	@Test
@@ -174,11 +175,11 @@ public class MedicationFhirResourceProviderTest {
 		
 		IBundleProvider results = resourceProvider.searchForMedication(null, null, null, uuid, null);
 		
-		List<IBaseResource> resultList = get(results);
+		List<Medication> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(resultList.iterator().next().fhirType(), equalTo(FhirConstants.MEDICATION));
+		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.MEDICATION));
 	}
 	
 	@Test
@@ -190,11 +191,11 @@ public class MedicationFhirResourceProviderTest {
 		
 		IBundleProvider results = resourceProvider.searchForMedication(null, null, null, null, lastUpdated);
 		
-		List<IBaseResource> resultList = get(results);
+		List<Medication> resultList = get(results);
 		
 		assertThat(results, notNullValue());
 		assertThat(resultList, hasSize(greaterThanOrEqualTo(1)));
-		assertThat(resultList.iterator().next().fhirType(), equalTo(FhirConstants.MEDICATION));
+		assertThat(resultList.get(0).fhirType(), equalTo(FhirConstants.MEDICATION));
 	}
 	
 	@Test

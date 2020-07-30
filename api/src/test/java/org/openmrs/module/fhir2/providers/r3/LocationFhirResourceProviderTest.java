@@ -44,16 +44,15 @@ import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.rest.server.exceptions.MethodNotAllowedException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hl7.fhir.convertors.conv30_40.Location30_40;
 import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
+import org.hl7.fhir.dstu3.model.Provenance;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Location;
-import org.hl7.fhir.r4.model.Provenance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,7 +98,7 @@ public class LocationFhirResourceProviderTest extends BaseFhirR3ProvenanceResour
 	
 	private LocationFhirResourceProvider resourceProvider;
 	
-	private Location location;
+	private org.hl7.fhir.r4.model.Location location;
 	
 	@Before
 	public void setup() {
@@ -115,7 +114,7 @@ public class LocationFhirResourceProviderTest extends BaseFhirR3ProvenanceResour
 		address.setState(STATE);
 		address.setPostalCode(POSTAL_CODE);
 		
-		location = new Location();
+		location = new org.hl7.fhir.r4.model.Location();
 		location.setId(LOCATION_UUID);
 		location.setName(LOCATION_NAME);
 		location.setAddress(address);
@@ -153,6 +152,7 @@ public class LocationFhirResourceProviderTest extends BaseFhirR3ProvenanceResour
 	public void findLocationsByName_shouldReturnMatchingBundleOfLocations() {
 		StringAndListParam nameParam = new StringAndListParam()
 		        .addAnd(new StringOrListParam().add(new StringParam(LOCATION_NAME)));
+		
 		when(locationService.searchForLocations(argThat(Matchers.is(nameParam)), isNull(), isNull(), isNull(), isNull(),
 		    isNull(), isNull(), isNull(), isNull(), isNull()))
 		            .thenReturn(new MockIBundleProvider<>(Collections.singletonList(location), PREFERRED_PAGE_SIZE, COUNT));
@@ -407,8 +407,9 @@ public class LocationFhirResourceProviderTest extends BaseFhirR3ProvenanceResour
 	
 	@Test
 	public void searchLocations_shouldReturnMatchingBundleOfLocations() {
-		List<Location> locations = new ArrayList<>();
+		List<org.hl7.fhir.r4.model.Location> locations = new ArrayList<>();
 		locations.add(location);
+		
 		when(locationService.searchForLocations(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
 		        .thenReturn(new MockIBundleProvider<>(locations, PREFERRED_PAGE_SIZE, COUNT));
 		
@@ -434,9 +435,9 @@ public class LocationFhirResourceProviderTest extends BaseFhirR3ProvenanceResour
 		
 		List<Resource> resources = resourceProvider.getLocationHistoryById(id);
 		
-		assertThat(resources, Matchers.notNullValue());
+		assertThat(resources, notNullValue());
 		assertThat(resources, not(empty()));
-		assertThat(resources.size(), Matchers.equalTo(2));
+		assertThat(resources.size(), equalTo(2));
 	}
 	
 	@Test
@@ -448,9 +449,8 @@ public class LocationFhirResourceProviderTest extends BaseFhirR3ProvenanceResour
 		List<Resource> resources = resourceProvider.getLocationHistoryById(id);
 		
 		assertThat(resources, not(empty()));
-		assertThat(resources.stream().findAny().isPresent(), Matchers.is(true));
-		assertThat(resources.stream().findAny().get().getResourceType().name(),
-		    Matchers.equalTo(Provenance.class.getSimpleName()));
+		assertThat(resources.stream().findAny().isPresent(), is(true));
+		assertThat(resources.stream().findAny().get().getResourceType().name(), equalTo(Provenance.class.getSimpleName()));
 	}
 	
 	@Test(expected = ResourceNotFoundException.class)
@@ -471,9 +471,9 @@ public class LocationFhirResourceProviderTest extends BaseFhirR3ProvenanceResour
 		when(locationService.create(any(org.hl7.fhir.r4.model.Location.class))).thenReturn(location);
 		
 		MethodOutcome result = resourceProvider.createLocation(Location30_40.convertLocation(location));
-		assertThat(result, CoreMatchers.notNullValue());
+		assertThat(result, notNullValue());
 		assertThat(result.getCreated(), is(true));
-		assertThat(result.getResource(), CoreMatchers.equalTo(location));
+		assertThat(result.getResource(), equalTo(location));
 	}
 	
 	@Test
@@ -504,8 +504,8 @@ public class LocationFhirResourceProviderTest extends BaseFhirR3ProvenanceResour
 		
 		MethodOutcome result = resourceProvider.updateLocation(new IdType().setValue(LOCATION_UUID),
 		    Location30_40.convertLocation(location));
-		assertThat(result, CoreMatchers.notNullValue());
-		assertThat(result.getResource(), CoreMatchers.equalTo(location));
+		assertThat(result, notNullValue());
+		assertThat(result.getResource(), equalTo(location));
 	}
 	
 	@Test(expected = InvalidRequestException.class)
